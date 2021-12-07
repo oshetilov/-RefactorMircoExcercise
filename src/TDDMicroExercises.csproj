@@ -88,6 +88,7 @@
     <Compile Include="TelemetrySystem.SomeDependencies\TelemetryDiagnosticControlsClient1.cs" />
     <Compile Include="TelemetrySystem.SomeDependencies\TelemetryDiagnosticControlsClient2.cs" />
     <Compile Include="TelemetrySystem.SomeDependencies\TelemetryDiagnosticControlsClient3.cs" />
+    <Compile Include="UnicodeFileToHtmlTextConverter.Tests\UnicodeFileToHtmlTextConverterTests.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

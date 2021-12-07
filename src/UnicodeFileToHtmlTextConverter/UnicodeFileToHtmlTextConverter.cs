@@ -5,26 +5,30 @@ namespace TDDMicroExercises.UnicodeFileToHtmlTextConverter
 {
     public class UnicodeFileToHtmlTextConverter
     {
-        private readonly string _fullFilenameWithPath;
-
+        private readonly TextReader _textReader;
 
         public UnicodeFileToHtmlTextConverter(string fullFilenameWithPath)
         {
-            _fullFilenameWithPath = fullFilenameWithPath;
+            _textReader = File.OpenText(fullFilenameWithPath);
+        }
+
+        public UnicodeFileToHtmlTextConverter(TextReader textReader)
+        {
+            _textReader = textReader;
         }
 
         public string ConvertToHtml()
         {
-            using (TextReader unicodeFileStream = File.OpenText(_fullFilenameWithPath))
+            using (_textReader)
             {
                 string html = string.Empty;
 
-                string line = unicodeFileStream.ReadLine();
+                string line = _textReader.ReadLine();
                 while (line != null)
                 {
                     html += HttpUtility.HtmlEncode(line);
                     html += "<br />";
-                    line = unicodeFileStream.ReadLine();
+                    line = _textReader.ReadLine();
                 }
 
                 return html;
