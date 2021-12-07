@@ -2,70 +2,70 @@ using System;
 
 namespace TDDMicroExercises.TelemetrySystem
 {
-	public class TelemetryClient
-	{
+    public class TelemetryClient : ITelemetryClient
+    {
         //
         // The communication with the server is simulated in this implementation.
         // Because the focus of the exercise is on the other class.
         //
 
-		public const string DiagnosticMessage = "AT#UD";
+        public const string DiagnosticMessage = "AT#UD";
 
-		private bool _onlineStatus;
-		private bool _diagnosticMessageJustSent = false;
+        private bool _onlineStatus;
+        private bool _diagnosticMessageJustSent;
 
         private readonly Random _connectionEventsSimulator = new Random();
         private readonly Random _randomMessageSimulator = new Random();
 
-		public bool OnlineStatus
-		{
-			get { return _onlineStatus; }
-		}
+        public bool OnlineStatus
+        {
+            get { return _onlineStatus; }
+        }
 
-		public void Connect(string telemetryServerConnectionString)
-		{
-			if (string.IsNullOrEmpty(telemetryServerConnectionString))
-			{
-				throw new ArgumentNullException();
-			}
+        public void Connect(string telemetryServerConnectionString)
+        {
+            if (string.IsNullOrEmpty(telemetryServerConnectionString))
+            {
+                throw new ArgumentNullException();
+            }
 
-			// Fake the connection with 20% chances of success
-			bool success = _connectionEventsSimulator.Next(1, 10) <= 2;
+            // Fake the connection with 20% chances of success
+            bool success = _connectionEventsSimulator.Next(1, 10) <= 2;
 
-			_onlineStatus = success;
+            _onlineStatus = success;
 
-		}
+        }
 
-		public void Disconnect()
-		{
-			_onlineStatus = false;
-		}
+        public void Disconnect()
+        {
+            _onlineStatus = false;
+        }
 
-		public void Send(string message)
-		{
-			if (string.IsNullOrEmpty(message))
-			{
-				throw new ArgumentNullException();
-			}
+        public void Send(string message)
+        {
+            if (string.IsNullOrEmpty(message))
+            {
+                throw new ArgumentNullException();
+            }
 
             // The simulation of Send() actually just remember if the last message sent was a diagnostic message.
             // This information will be used to simulate the Receive(). Indeed there is no real server listening.
             if (message == DiagnosticMessage)
-			{
-			    _diagnosticMessageJustSent = true;
-			}
-			else
-			{
-			    _diagnosticMessageJustSent = false;
-			}
-		}
+            {
+                _diagnosticMessageJustSent = true;
+            }
+            else
+            {
+                _diagnosticMessageJustSent = false;
+            }
+        }
 
-		public string Receive()
-		{
-			string message;
+        public string Receive()
+        {
+            string message;
 
             if (_diagnosticMessageJustSent)
-			{
+            {
                 // Simulate the reception of the diagnostic message
                 message = "LAST TX rate................ 100 MBPS\r\n"
                     + "HIGHEST TX rate............. 100 MBPS\r\n"
@@ -83,19 +83,19 @@ namespace TDDMicroExercises.TelemetrySystem
                     + "Remote Rtrn Count........... 00";
 
                 _diagnosticMessageJustSent = false;
-			} 
-			else
-			{                
-				// Simulate the reception of a response message returning a random message.
-				message = string.Empty;
+            }
+            else
+            {
+                // Simulate the reception of a response message returning a random message.
+                message = string.Empty;
                 int messageLength = _randomMessageSimulator.Next(50, 110);
-				for(int i = messageLength; i > 0; --i)
-				{
+                for (int i = messageLength; i > 0; --i)
+                {
                     message += (char)_randomMessageSimulator.Next(40, 126);
-				}
-			}
+                }
+            }
 
-			return message;
-		}
-	}
+            return message;
+        }
+    }
 }
